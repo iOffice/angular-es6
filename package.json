@@ -52,6 +52,7 @@
     "release": "./build/publish.sh",
     "babel": "babel src -d lib -D",
     "dev": "webpack --config example/js/webpack.config.js --watch",
+    "dev-uglify": "export UGLIFY=true; webpack --config example/js/webpack.config.js --watch",
     "serve": "live-server --port=3004 --open=./example",
     "start": "npm run serve & npm run dev"
   }
