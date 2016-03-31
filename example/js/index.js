@@ -1,5 +1,5 @@
 import angular from 'angular';
-import ngRegister from '../../src/ng-register.js';
+import { ngRegister } from '../../lib/index.js';
 import ExDirective from './ex-directive.js';
 import ExService from './ex-service.js';
 

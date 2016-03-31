@@ -1,10 +1,11 @@
 import ExController from './ex-controller.js';
+import { Injectable } from '../../lib/index.js';
 
 
-class ExDirective {
+class ExDirective extends Injectable {
 
-  constructor($interval) {
-    this.$interval = $interval;
+  constructor(...args) {
+    super(...args);
     this.template = '<div>I\'m a directive!</div>';
     this.restrict = 'EA';
     this.scope = {};

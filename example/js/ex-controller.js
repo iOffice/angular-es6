@@ -1,8 +1,7 @@
-class ExController {
+import { Injectable } from '../../lib/index.js';
 
-  constructor(exService) {
-    this.exService = exService;
-  }
+
+class ExController extends Injectable {
 
   move(element) {
     element.css('left', `${Math.random() * this.exService.getRange()}px`);
@@ -10,7 +9,7 @@ class ExController {
   }
 
 }
-
 ExController.$inject = ['exService'];
+
 
 export default ExController;
