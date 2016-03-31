@@ -18,7 +18,7 @@ class ExDirective {
   }
 
   // optional link function
-  postLink(scope, element, attr, ctrl) {
+  link(scope, element, attr, ctrl) {
     this.$interval(() => ctrl.move(element), 1000);
   }
 

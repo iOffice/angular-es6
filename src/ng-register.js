@@ -27,9 +27,16 @@ class NgRegister {
     // itself returns `this.link` from within the compile function.
     this._override(proto, 'compile', () => function compileReturns(...args) {
       originalCompileFn.apply(this, args);
+      const preLink = proto.preLink ? proto.preLink.bind(this) : angular.noop;
+      let postLink = angular.noop;
+      if (proto.postLink) {
+        postLink = proto.postLink.bind(this);
+      } else if (proto.link) {
+        postLink = proto.link.bind(this);
+      }
       return {
-        pre: proto.preLink ? proto.preLink.bind(this) : angular.noop,
-        post: proto.postLink ? proto.postLink.bind(this) : angular.noop,
+        pre: preLink,
+        post: postLink,
       };
     });
 
