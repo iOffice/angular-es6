@@ -68,4 +68,15 @@ See `example/js/ex-directive.js`. One thing to mention here is that `compile`, `
 then only the `postLink` method will be called. These two methods should be one and the same so only
 declare one.
 
+### IE WARNING
+
+When using inheritance we need the following polyfill in IE:
+
+```
+const key = 'setPrototypeOf';
+if (typeof Object[key] === 'undefined') {
+  Object[key] = require('babel-runtime/helpers/defaults.js').default;
+}
+```
+
 [1]: https://github.com/michaelbromley/angular-es6

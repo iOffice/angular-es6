@@ -1,3 +1,4 @@
+import './polyfill.js';
 import angular from 'angular';
 import { ngRegister } from '../../src/index.js';
 import ExDirective from './ex-directive.js';
