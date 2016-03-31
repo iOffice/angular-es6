@@ -22,7 +22,8 @@ class MyAngularComponent {
         // more stuff here
     }
 }
-MyAngularComponent.$inject = ['dependency1', 'dependency2'];
+MyAngularComponent.inject('dependency1', 'dependency2');
+// MyAngularComponent.inject(['dependency1', 'dependency2']);
 
 
 ngRegister('app')
@@ -50,7 +51,8 @@ class MyAngularComponent extends Injectable {
         // more stuff here
     }
 }
-MyAngularComponent.$inject = ['dependency1', 'dependency2'];
+MyAngularComponent.inject('dependency1', 'dependency2');
+// MyAngularComponent.inject(['dependency1', 'dependency2']);
 
 
 ngRegister('app')
