@@ -1,15 +1,16 @@
-import ExController from './ex-controller.js';
-import { Injectable } from '../../lib/index.js';
+import DerivedController from './ex-controller.js';
+import { Injectable } from '../../src/index.js';
 
 
 class ExDirective extends Injectable {
 
   constructor(...args) {
     super(...args);
+    console.log('ExDirective: ', this);
     this.template = '<div>I\'m a directive!</div>';
     this.restrict = 'EA';
     this.scope = {};
-    this.controller = ExController;
+    this.controller = DerivedController;
     // etc. for the usual config options
   }
 
@@ -20,10 +21,11 @@ class ExDirective extends Injectable {
 
   // optional link function
   link(scope, element, attr, ctrl) {
-    this.$interval(() => ctrl.move(element), 1000);
+    this.$interval(() => ctrl.move(element), 2500);
   }
 
 }
-ExDirective.$inject = ['$interval'];
+ExDirective.inject('$interval');
+
 
 export default ExDirective;
