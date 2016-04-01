@@ -10,8 +10,39 @@ import angular from 'angular';
  */
 class NgRegister {
 
-  constructor(appName) {
-    this.app = angular.module(appName);
+  constructor(appName, dependencies = null) {
+    if (dependencies === null) {
+      this.app = angular.module(appName);
+    } else {
+      this.app = angular.module(appName, dependencies);
+    }
+    const methods = [
+      'requires',
+      'name',
+      'provider',
+      // 'factory',
+      'service',
+      'value',
+      'constant',
+      'decorator',
+      'animation',
+      'filter',
+      'controller',
+      // 'directive',
+      'component',
+      'config',
+      'run',
+    ];
+    methods.forEach((name) => {
+      this[name] = this._wrapMethod(name);
+    });
+  }
+
+  _wrapMethod(method) {
+    return (...args) => {
+      this.app[method](...args);
+      return this;
+    };
   }
 
   directive(name, constructorFn_) {
@@ -42,21 +73,6 @@ class NgRegister {
 
     const factoryArray = this._createFactoryArray(constructorFn);
     this.app.directive(name, factoryArray);
-    return this;
-  }
-
-  controller(name, contructorFn) {
-    this.app.controller(name, contructorFn);
-    return this;
-  }
-
-  service(name, contructorFn) {
-    this.app.service(name, contructorFn);
-    return this;
-  }
-
-  provider(name, constructorFn) {
-    this.app.provider(name, constructorFn);
     return this;
   }
 
@@ -137,8 +153,8 @@ class NgRegister {
 }
 
 
-function ngRegister(appName) {
-  return new NgRegister(appName);
+function ngRegister(appName, dependencies = null) {
+  return new NgRegister(appName, dependencies);
 }
 
 
