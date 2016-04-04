@@ -5,7 +5,7 @@ This library provides the `ngRegister` function which is a modified copy of Mich
 
 ## Example
 
-This library allows declare classes and register them as angular components. Here is a summary
+This library allows us to declare classes and register them as angular components. Here is a summary
 
 ```javascript
 import { ngRegister } from 'angular-es6';
@@ -33,7 +33,7 @@ ngRegister('app')
     .directive('myDirective', MyAngularComponent);
 ```
 
-or if you prefer to use the dependencies without declaring them in the constructor simply do
+or if you prefer to use the dependencies without declaring them you may inherit from `Injectable`.
 
 ```javascript
 import { ngRegister, Injectable } from 'angular-es6';
@@ -61,6 +61,8 @@ ngRegister('app')
     .factory('myFactory', MyAngularComponent)
     .directive('myDirective', MyAngularComponent);
 ```
+
+**NOTE:** Do not forget to call the `super` constructor with all `...args`.
 
 If you need to make a component that is `Injectable` and extends from some other class you may
 use the `mix` function provided by this library. For instance:
@@ -116,7 +118,7 @@ declare one.
 
 When using inheritance we need the following polyfill in IE:
 
-```
+```javascript
 const key = 'setPrototypeOf';
 if (typeof Object[key] === 'undefined') {
   Object[key] = require('babel-runtime/helpers/defaults.js').default;
