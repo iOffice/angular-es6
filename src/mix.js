@@ -1,12 +1,19 @@
 const classCallCheckMod = require('babel-runtime/helpers/classCallCheck.js');
 const classCallCheck = classCallCheckMod.default;
+let classCallCheckOn = 0;
 
 
-function copyProperties(target, source) {
-  for (const key of Reflect.ownKeys(source)) {
-    if (key !== 'constructor' && key !== 'prototype' && key !== 'name') {
-      const desc = Object.getOwnPropertyDescriptor(source, key);
-      Object.defineProperty(target, key, desc);
+function _addBase(clazz, mixin) {
+  if (clazz.__mixins.indexOf(mixin) === -1) {
+    clazz.__mixins.unshift(mixin);
+    if (mixin.__mixins) {
+      mixin.__mixins.forEach((base) => {
+        _addBase(clazz, base);
+      });
+    }
+    const parent = Object.getPrototypeOf(mixin.prototype);
+    if (parent) {
+      _addBase(clazz, parent.constructor);
     }
   }
 }
@@ -17,23 +24,27 @@ function mix(...mixins) {
 
     constructor(...args) {
       classCallCheckMod.default = () => {};
+      classCallCheckOn += 1;
       args.forEach((arg) => {
         const constructorArgs = arg.slice(1);
         const clazz = arg[0];
         clazz.call(this, ...constructorArgs);
       });
-      classCallCheckMod.default = classCallCheck;
+      classCallCheckOn -= 1;
+      if (classCallCheckOn === 0) {
+        classCallCheckMod.default = classCallCheck;
+      }
     }
 
   }
+  Mix.__mixins = [];
 
-  // Add all the methods and accessors of the mixins to class Mix.
   for (const mixin of mixins) {
-    copyProperties(Mix, mixin);
-    copyProperties(Mix.prototype, mixin.prototype);
+    _addBase(Mix, mixin);
+    for (const prop in mixin.prototype) {
+      Mix.prototype[prop] = mixin.prototype[prop];
+    }
   }
-  Mix.__mixins = mixins;
-
   return Mix;
 }
 

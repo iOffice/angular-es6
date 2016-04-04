@@ -1,9 +1,37 @@
 import { Injectable, mix, isinstance } from '../../src/index.js';
 
 
-class A {
+class OldBase {
+  constructor(y) {
+    this.y = y;
+  }
+
+  getY() {
+    return this.y;
+  }
+
+  static sayHi() {
+    console.log("Hi from OldBase");
+  }
+}
+
+
+class Base extends OldBase {
+  constructor(x) {
+    super(500);
+    this.x = x;
+  }
+
+  getX() {
+    return this.x;
+  }
+}
+
+
+class A extends Base {
 
   constructor(a) {
+    super(5);
     this.a = a;
   }
 
@@ -14,9 +42,10 @@ class A {
 }
 
 
-class B {
+class B extends A {
 
-  constructor(b) {
+  constructor(a, b) {
+    super(a);
     this.b = b;
   }
 
@@ -24,13 +53,17 @@ class B {
     return this.b;
   }
 
+  getA() {
+    console.log("calling A from B");
+  }
+
 }
 
 
-class C extends mix(A, B) {
+class C extends A {
 
-  constructor(a, b, c) {
-    super([A, a], [B, b]);
+  constructor(a, c) {
+    super(a);
     this.c = c;
   }
 
@@ -38,7 +71,52 @@ class C extends mix(A, B) {
     return this.c;
   }
 
+  getA() {
+    console.log("calling A from C");
+  }
+
 }
+
+
+class D extends mix(B, C) {
+
+  constructor(a, b, c, d) {
+    super([B, a, b], [C, a, c]);
+    this.d = d;
+  }
+
+  getD() {
+    return this.d;
+  }
+
+  getA() {
+    B.prototype.getA.call(this);
+    super.getA();
+    console.log("calling A from D");
+    return this.a;
+  }
+
+}
+
+class E {
+
+  constructor(blah) {
+    this.blah = blah;
+  }
+
+}
+
+
+class F extends mix(D, E) {
+  constructor() {
+    //super([E, 2], [A, 1]);
+    //console.log('FROM F:', this.blah, this.a);
+    console.log("Calling super...");
+    super([D, 1, 2, 3, 4], [E, 1000]);
+    console.log('FROM F: ', this.a, this.b, this.c, this.d, this.blah);
+  }
+}
+
 
 class ExController extends Injectable {
 
@@ -56,12 +134,20 @@ class DerivedController extends ExController {
 
   constructor(...args) {
     super(...args);
-    this.objC = new C(1, 2, 3);
-    console.log('isinstance(objC, A): ', isinstance(this.objC, A));
-    console.log('isinstance(objC, B): ', isinstance(this.objC, [ExController, B]));
-    console.log('isinstance(objC, C): ', isinstance(this.objC, C));
-    console.log('isinstance(objC, ExController): ', isinstance(this.objC, ExController));
-    console.log('made object C: ', this.objC.getA(), this.objC.getB(), this.objC.getC());
+    const f = new F();
+    C.sayHi();
+    console.log(`f is D: ${isinstance(f, D)}`);
+    console.log(`f is E: ${isinstance(f, E)}`);
+    console.log(`f is A: ${isinstance(f, A)}`);
+    console.log(`f is C: ${isinstance(f, C)}`);
+    console.log(`f is ExController: ${isinstance(f, ExController)}`);
+    this.obj = new D(1, 2, 3, 4);
+    window.obj = this.obj;
+    console.log('isinstance(objC, A): ', isinstance(this.obj, A), this.obj.getA());
+    console.log('isinstance(objC, B): ', isinstance(this.obj, [ExController, B]));
+    console.log('isinstance(objC, C): ', isinstance(this.obj, C));
+    console.log('isinstance(objC, ExController): ', isinstance(this.obj, ExController));
+    console.log('made object C: ', this.obj.getA(), this.obj.getB(), this.obj.getC(), this.obj.getD(), this.obj.getX(), this.obj.getY());
     console.log('Derived: ', this);
   }
 
