@@ -102,6 +102,8 @@ SomeController.inject([
 ]);
 ```
 
+NOTE: Do not use `instanceof` when using `mix`. Instead use the `isinstance` function provided by
+the library.
 
 ### Creating directives
 
