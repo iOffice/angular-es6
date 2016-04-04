@@ -152,12 +152,12 @@ class DerivedController extends mix(ExController, C) {
     console.log('isinstance(objC, B): ', isinstance(this.obj, [ExController, B]));
     console.log('isinstance(objC, C): ', isinstance(this.obj, C));
     console.log('isinstance(objC, ExController): ', isinstance(this.obj, ExController));
-    console.log('made object C: ', this.obj.getA(), this.obj.getB(), this.obj.getC(), this.obj.getD(), this.obj.getX(), this.obj.getY());
+    console.log('made object C: ', [this.obj.getA(), this.obj.getB(), this.obj.getC(), this.obj.getD(), this.obj.getX(), this.obj.getY()]);
     console.log('Derived: ', this);
   }
 
   move(element) {
-    this.$log.log('Calling base method ...', this.getA(), this.getC());
+    this.$log.log('Calling base method ...', [this.getA(), this.getC()]);
     super.move(element);
     this.$log.log('It has been called. Hey look, its injection: ', this.exService);
     return this;
