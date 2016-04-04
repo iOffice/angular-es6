@@ -97,6 +97,7 @@ class D extends mix(B, C) {
   }
 
 }
+D.sayHi = C.sayHi;
 
 class E {
 
@@ -135,7 +136,7 @@ class DerivedController extends ExController {
   constructor(...args) {
     super(...args);
     const f = new F();
-    C.sayHi();
+    D.sayHi();
     console.log(`f is D: ${isinstance(f, D)}`);
     console.log(`f is E: ${isinstance(f, E)}`);
     console.log(`f is A: ${isinstance(f, A)}`);
