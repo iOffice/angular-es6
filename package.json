@@ -1,7 +1,7 @@
 {
   "name": "angular-es6",
   "description": "An approach to using ES6 class in Angular JS 1.x",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "main": "lib/index.js",
   "private": true,
   "eslintConfig": {
