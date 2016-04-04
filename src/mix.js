@@ -39,12 +39,17 @@ function mix(...mixins) {
   }
   Mix.__mixins = [];
 
-  for (const mixin of mixins) {
+  mixins.forEach((mixin) => {
     _addBase(Mix, mixin);
+    for (const p in mixin) {
+      if (p !== '__mixins') {
+        Mix[p] = mixin[p];
+      }
+    }
     for (const prop in mixin.prototype) {
       Mix.prototype[prop] = mixin.prototype[prop];
     }
-  }
+  });
   return Mix;
 }
 

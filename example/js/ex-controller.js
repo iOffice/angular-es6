@@ -73,6 +73,7 @@ class C extends A {
 
   getA() {
     console.log("calling A from C");
+    return this.a;
   }
 
 }
@@ -89,15 +90,14 @@ class D extends mix(B, C) {
     return this.d;
   }
 
-  getA() {
-    B.prototype.getA.call(this);
-    super.getA();
-    console.log("calling A from D");
-    return this.a;
-  }
+  //getA() {
+  //  B.prototype.getA.call(this);
+  //  super.getA();
+  //  console.log("calling A from D");
+  //  return this.a;
+  //}
 
 }
-D.sayHi = C.sayHi;
 
 class E {
 
@@ -110,7 +110,7 @@ class E {
 
 class F extends mix(D, E) {
   constructor() {
-    //super([E, 2], [A, 1]);
+    super([E, 2], [D, 1, 2, 3, 4]);
     //console.log('FROM F:', this.blah, this.a);
     console.log("Calling super...");
     super([D, 1, 2, 3, 4], [E, 1000]);
@@ -131,10 +131,10 @@ class ExController extends Injectable {
 ExController.inject('exService');
 
 
-class DerivedController extends ExController {
+class DerivedController extends mix(ExController, C) {
 
   constructor(...args) {
-    super(...args);
+    super([ExController, ...args], [C, 5000, 6000]);
     const f = new F();
     D.sayHi();
     console.log(`f is D: ${isinstance(f, D)}`);
@@ -153,7 +153,7 @@ class DerivedController extends ExController {
   }
 
   move(element) {
-    this.$log.log('Calling base method ...');
+    this.$log.log('Calling base method ...', this.getA(), this.getC());
     super.move(element);
     this.$log.log('It has been called. Hey look, its injection: ', this.exService);
   }
@@ -161,5 +161,6 @@ class DerivedController extends ExController {
 }
 DerivedController.inject(['$log']);
 
+console.log("CHECK EM: ", DerivedController.$inject, ExController.$inject);
 
 export default DerivedController;
