@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import { Injectable, mix, isinstance } from '../../src/index.js';
 
 
@@ -11,7 +12,8 @@ class OldBase {
   }
 
   static sayHi() {
-    console.log("Hi from OldBase");
+    console.log('Hi from OldBase');
+    return this;
   }
 }
 
@@ -54,7 +56,8 @@ class B extends A {
   }
 
   getA() {
-    console.log("calling A from B");
+    console.log('calling A from B');
+    return this;
   }
 
 }
@@ -72,7 +75,7 @@ class C extends A {
   }
 
   getA() {
-    console.log("calling A from C");
+    console.log('calling A from C');
     return this.a;
   }
 
@@ -90,12 +93,12 @@ class D extends mix(B, C) {
     return this.d;
   }
 
-  //getA() {
+  // getA() {
   //  B.prototype.getA.call(this);
   //  super.getA();
   //  console.log("calling A from D");
   //  return this.a;
-  //}
+  // }
 
 }
 
@@ -111,8 +114,8 @@ class E {
 class F extends mix(D, E) {
   constructor() {
     super([E, 2], [D, 1, 2, 3, 4]);
-    //console.log('FROM F:', this.blah, this.a);
-    console.log("Calling super...");
+    // console.log('FROM F:', this.blah, this.a);
+    console.log('Calling super...');
     super([D, 1, 2, 3, 4], [E, 1000]);
     console.log('FROM F: ', this.a, this.b, this.c, this.d, this.blah);
   }
@@ -125,6 +128,7 @@ class ExController extends Injectable {
     console.log('Am I aware of derived injections? ', this.$log);
     element.css('left', `${Math.random() * this.exService.getRange()}px`);
     element.css('top', `${Math.random() * this.exService.getRange()}px`);
+    return this;
   }
 
 }
@@ -156,11 +160,12 @@ class DerivedController extends mix(ExController, C) {
     this.$log.log('Calling base method ...', this.getA(), this.getC());
     super.move(element);
     this.$log.log('It has been called. Hey look, its injection: ', this.exService);
+    return this;
   }
 
 }
 DerivedController.inject(['$log']);
 
-console.log("CHECK EM: ", DerivedController.$inject, ExController.$inject);
+console.log('CHECK EM: ', DerivedController.$inject, ExController.$inject);
 
 export default DerivedController;
