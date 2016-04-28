@@ -4,6 +4,7 @@
 import angular from 'angular';
 
 
+/* eslint-disable guard-for-in */
 /**
  * A helper class to simplify registering Angular components and provide a consistent syntax for
  * doing so.
@@ -49,7 +50,7 @@ class NgRegister {
     const constructorFn = this._normalizeConstructor(constructorFn_);
     const proto = constructorFn.prototype;
 
-    proto.compile = proto.compile || angular.noop;
+    proto.compile = proto.compile || (() => {});
     const originalCompileFn = this._cloneFunction(proto.compile);
 
     // Decorate the compile method to automatically return the preLink and postLink methods (if
@@ -58,8 +59,8 @@ class NgRegister {
     // itself returns `this.link` from within the compile function.
     this._override(proto, 'compile', () => function compileReturns(...args) {
       originalCompileFn.apply(this, args);
-      const preLink = proto.preLink ? proto.preLink.bind(this) : angular.noop;
-      let postLink = angular.noop;
+      const preLink = proto.preLink ? proto.preLink.bind(this) : () => {};
+      let postLink = () => {};
       if (proto.postLink) {
         postLink = proto.postLink.bind(this);
       } else if (proto.link) {
@@ -119,9 +120,9 @@ class NgRegister {
       // return new constructorFn(...args);
       const instance = new CostructorFn(...factoryArgs);
       // see this: https://github.com/michaelbromley/angular-es6/issues/1
-      // for (const key in instance) {
-      //   instance[key] = instance[key];
-      // }
+      for (const key in instance) {
+        instance[key] = instance[key];
+      }
       return instance;
     });
 
