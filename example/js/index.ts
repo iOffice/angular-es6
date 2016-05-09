@@ -1,7 +1,6 @@
-import './polyfill.js';
-import { ngRegister } from '../../src/index.js';
-import ExDirective from './ex-directive.js';
-import ExService from './ex-service.js';
+import { ngRegister } from '../../src/index';
+import ExDirective from './ex-directive';
+import ExService from './ex-service';
 
 
 class DemoController {}

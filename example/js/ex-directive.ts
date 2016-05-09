@@ -1,5 +1,5 @@
-import DerivedController from './ex-controller.js';
-import { Injectable } from '../../src/index.js';
+import DerivedController from './ex-controller';
+import { Injectable } from '../../src/index';
 
 
 class ExDirective extends Injectable {

@@ -1,5 +1,5 @@
 /* eslint-disable no-console */
-import { Injectable, mix, isinstance } from '../../src/index.js';
+import { Injectable, mix, isinstance } from '../../src/index';
 
 
 class OldBase {

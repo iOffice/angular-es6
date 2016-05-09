@@ -8,7 +8,7 @@ const rel = x => path.resolve(__dirname, x);
 
 const config = {
   entry: {
-    'dist/all': rel('./index.js'),
+    'dist/all': rel('./index.ts'),
   },
   output: {
     path: rel('..'),
