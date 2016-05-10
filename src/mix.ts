@@ -1,12 +1,12 @@
-function _addBase(clazz, mixin) {
+function _addBase(clazz: any, mixin: any): void {
   if (clazz.$$mixins.indexOf(mixin) === -1) {
     clazz.$$mixins.unshift(mixin);
     if (mixin.$$mixins) {
-      mixin.$$mixins.forEach((base) => {
+      mixin.$$mixins.forEach((base: any) => {
         _addBase(clazz, base);
       });
     }
-    const parent = Object.getPrototypeOf(mixin.prototype);
+    const parent: any = Object.getPrototypeOf(mixin.prototype);
     if (parent) {
       _addBase(clazz, parent.constructor);
     }
@@ -19,6 +19,11 @@ function mix(...mixins: any[]): typeof Mix {
 
     static $$mixins: any[] = [];
 
+    /**
+     * When extending from a Mix object we must call `super` in the following fashion
+     *
+     *      super([mixin1, arg1, arg2, ...], [mixin2, arg1, arg2, ...], ...);
+     */
     constructor(...args: any[][]) {
       args.forEach((arg: any[]) => {
         const clazz: any = arg[0];
@@ -42,6 +47,7 @@ function mix(...mixins: any[]): typeof Mix {
         Mix[p] = mixin[p];
       }
     }
+    // tslint:disable:forin
     for (const prop in mixin.prototype) {
       Mix.prototype[prop] = mixin.prototype[prop];
     }
@@ -51,11 +57,11 @@ function mix(...mixins: any[]): typeof Mix {
 }
 
 
-function _isinstance(object, classinfo) {
-  const proto = Object.getPrototypeOf(object);
-  const mixins = proto.constructor.$$mixins;
+function _isinstance(object: any, classinfo: any): boolean {
+  const proto: any = Object.getPrototypeOf(object);
+  const mixins: any[] = proto.constructor.$$mixins;
 
-  let result = object instanceof classinfo;
+  let result: boolean = object instanceof classinfo;
   if (!result && mixins) {
     for (const index in mixins) {
       if (mixins[index].prototype === classinfo.prototype) {
@@ -68,9 +74,9 @@ function _isinstance(object, classinfo) {
 }
 
 
-function isinstance(object, classinfo) {
+function isinstance(object: any, classinfo: any): boolean {
   if (Array.isArray(classinfo)) {
-    let result = false;
+    let result: boolean = false;
     for (const index in classinfo) {
       if (_isinstance(object, classinfo[index])) {
         result = true;
