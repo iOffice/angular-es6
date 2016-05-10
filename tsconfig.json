@@ -1,0 +1,11 @@
+{
+  "compilerOptions": {
+    "target": "es3"
+  },
+  "filesGlob": [
+    "**/*.ts",
+    "typings/main.d.ts",
+    "!typings/**",
+    "!node_modules/**"
+  ]
+}

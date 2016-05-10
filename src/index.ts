@@ -1,6 +1,6 @@
-import Injectable from './injectable.js';
-import ngRegister from './ng-register.js';
-import { mix, isinstance } from './mix.js';
+import Injectable from './injectable';
+import ngRegister from './ng-register';
+import { mix, isinstance } from './mix';
 
 export {
   Injectable,

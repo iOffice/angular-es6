@@ -1,4 +1,7 @@
 .idea/
 node_modules/
+typings/
 lib/
+src/**/*.js
+example/**/*.js
 dist/

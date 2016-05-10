@@ -1,13 +1,8 @@
-const classCallCheckMod = require('babel-runtime/helpers/classCallCheck.js');
-const classCallCheck = classCallCheckMod.default;
-let classCallCheckOn = 0;
-
-
 function _addBase(clazz, mixin) {
-  if (clazz.__mixins.indexOf(mixin) === -1) {
-    clazz.__mixins.unshift(mixin);
-    if (mixin.__mixins) {
-      mixin.__mixins.forEach((base) => {
+  if (clazz.$$mixins.indexOf(mixin) === -1) {
+    clazz.$$mixins.unshift(mixin);
+    if (mixin.$$mixins) {
+      mixin.$$mixins.forEach((base) => {
         _addBase(clazz, base);
       });
     }
@@ -19,30 +14,31 @@ function _addBase(clazz, mixin) {
 }
 
 
-function mix(...mixins) {
+function mix(...mixins: any[]): typeof Mix {
   class Mix {
 
-    constructor(...args) {
-      classCallCheckMod.default = () => {};
-      classCallCheckOn += 1;
-      args.forEach((arg) => {
-        const constructorArgs = arg.slice(1);
-        const clazz = arg[0];
+    static $$mixins: any[] = [];
+
+    constructor(...args: any[][]) {
+      args.forEach((arg: any[]) => {
+        const clazz: any = arg[0];
+        const constructorArgs: any[] = arg.slice(1);
         clazz.call(this, ...constructorArgs);
       });
-      classCallCheckOn -= 1;
-      if (classCallCheckOn === 0) {
-        classCallCheckMod.default = classCallCheck;
-      }
     }
 
+    /**
+     * Allows to call any of the base methods.
+     */
+    callBase(base: any, method: string, ...args: any[]): any {
+      return base.prototype[method].call(this, ...args);
+    }
   }
-  Mix.__mixins = [];
 
-  mixins.forEach((mixin) => {
+  mixins.forEach((mixin: any) => {
     _addBase(Mix, mixin);
     for (const p in mixin) {
-      if (p !== '__mixins') {
+      if (p !== '$$mixins') {
         Mix[p] = mixin[p];
       }
     }
@@ -50,13 +46,14 @@ function mix(...mixins) {
       Mix.prototype[prop] = mixin.prototype[prop];
     }
   });
+
   return Mix;
 }
 
 
 function _isinstance(object, classinfo) {
   const proto = Object.getPrototypeOf(object);
-  const mixins = proto.constructor.__mixins;
+  const mixins = proto.constructor.$$mixins;
 
   let result = object instanceof classinfo;
   if (!result && mixins) {

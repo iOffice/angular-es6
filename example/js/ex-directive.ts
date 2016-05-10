@@ -15,12 +15,12 @@ class ExDirective extends Injectable {
   }
 
   // optional compile function
-  compile(tElement) {
+  compile(tElement: HTMLElement): void {
     tElement.css('position', 'absolute');
   }
 
   // optional link function
-  link(scope, element, attr, ctrl) {
+  link(scope: any, element: any, attr: any, ctrl: DerivedController): void {
     this.$interval(() => ctrl.move(element), 2500);
   }
 

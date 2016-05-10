@@ -1,23 +1,25 @@
 /**
  * Obtained and modified from: https://github.com/michaelbromley/angular-es6
  */
-import angular from 'angular';
+import * as angular from 'angular';
 
 
-/* eslint-disable guard-for-in */
+/* tslint:disable:forin */
 /**
  * A helper class to simplify registering Angular components and provide a consistent syntax for
  * doing so.
  */
 class NgRegister {
 
-  constructor(appName, dependencies = null) {
-    if (dependencies === null) {
+  app: angular.IModule;
+
+  constructor(appName: string, dependencies?: string[]) {
+    if (dependencies === undefined) {
       this.app = angular.module(appName);
     } else {
       this.app = angular.module(appName, dependencies);
     }
-    const methods = [
+    const methods: string[] = [
       'requires',
       'name',
       'provider',
@@ -34,33 +36,33 @@ class NgRegister {
       'config',
       'run',
     ];
-    methods.forEach((name) => {
+    methods.forEach((name: string) => {
       this[name] = this._wrapMethod(name);
     });
   }
 
-  _wrapMethod(method) {
-    return (...args) => {
+  _wrapMethod(method: string): Function {
+    return (...args: any[]) => {
       this.app[method](...args);
       return this;
     };
   }
 
-  directive(name, constructorFn_) {
-    const constructorFn = this._normalizeConstructor(constructorFn_);
-    const proto = constructorFn.prototype;
+  directive(name: string, constructorFunction: Function): NgRegister {
+    const constructorFn: Function = this._normalizeConstructor(constructorFunction);
+    const proto: any = constructorFn.prototype;
 
     proto.compile = proto.compile || (() => {});
-    const originalCompileFn = this._cloneFunction(proto.compile);
+    const originalCompileFn: Function = this._cloneFunction(proto.compile);
 
     // Decorate the compile method to automatically return the preLink and postLink methods (if
     // they exists) and bind them to the context of the constructor (so `this` works correctly).
     // This gets around the problem of a non-lexical "this" which occurs when the directive class
     // itself returns `this.link` from within the compile function.
-    this._override(proto, 'compile', () => function compileReturns(...args) {
+    this._override(proto, 'compile', () => function compileReturns(...args: any[]): {} {
       originalCompileFn.apply(this, args);
-      const preLink = proto.preLink ? proto.preLink.bind(this) : () => {};
-      let postLink = () => {};
+      const preLink: Function = proto.preLink ? proto.preLink.bind(this) : () => {};
+      let postLink: Function = () => {};
       if (proto.postLink) {
         postLink = proto.postLink.bind(this);
       } else if (proto.link) {
@@ -77,8 +79,8 @@ class NgRegister {
     return this;
   }
 
-  factory(name, constructorFn_) {
-    const constructorFn = this._normalizeConstructor(constructorFn_);
+  factory(name, constructorFunction) {
+    const constructorFn = this._normalizeConstructor(constructorFunction);
     const factoryArray = this._createFactoryArray(constructorFn);
     this.app.factory(name, factoryArray);
     return this;
@@ -89,10 +91,10 @@ class NgRegister {
    * we need to pull out the array of dependencies and add it as an $inject property of the
    * actual constructor function.
    */
-  _normalizeConstructor(input) {
-    let constructorFn;
+  _normalizeConstructor(input: Function|Array): Function {
+    let constructorFn: Function;
     if (input.constructor === Array) {
-      const injected = input.slice(0, input.length - 1);
+      const injected: string[] = input.slice(0, input.length - 1);
       constructorFn = input[input.length - 1];
       constructorFn.$inject = injected;
     } else {
@@ -111,9 +113,9 @@ class NgRegister {
   _createFactoryArray(CostructorFn) {
     // get the array of dependencies that are needed by this component (as contained in the
     // `$inject` array)
-    const args = CostructorFn.$inject || [];
+    const args: string[] = CostructorFn.$inject || [];
     // create a copy of the array
-    const factoryArray = args.slice();
+    const factoryArray: string[] = args.slice();
     // The factoryArray uses Angular's array notation whereby each element of the array is the name
     // of a dependency, and the final item is the factory function itself.
     factoryArray.push((...factoryArgs) => {
@@ -154,7 +156,7 @@ class NgRegister {
 }
 
 
-function ngRegister(appName, dependencies = null) {
+function ngRegister(appName: string, dependencies?: string[]): NgRegister {
   return new NgRegister(appName, dependencies);
 }
 

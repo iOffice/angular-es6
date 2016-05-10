@@ -3,28 +3,33 @@ import { Injectable, mix, isinstance } from '../../src/index';
 
 
 class OldBase {
-  constructor(y) {
+
+  y: number;
+
+  constructor(y: number) {
     this.y = y;
   }
 
-  getY() {
+  getY(): number {
     return this.y;
   }
 
-  static sayHi() {
+  static sayHi(): void {
     console.log('Hi from OldBase');
-    return this;
   }
 }
 
 
 class Base extends OldBase {
-  constructor(x) {
+
+  x: number;
+
+  constructor(x: number) {
     super(500);
     this.x = x;
   }
 
-  getX() {
+  getX(): number {
     return this.x;
   }
 }
@@ -32,12 +37,14 @@ class Base extends OldBase {
 
 class A extends Base {
 
-  constructor(a) {
+  a: number;
+
+  constructor(a: number) {
     super(5);
     this.a = a;
   }
 
-  getA() {
+  getA(): number {
     return this.a;
   }
 
@@ -46,18 +53,20 @@ class A extends Base {
 
 class B extends A {
 
-  constructor(a, b) {
+  b: number;
+
+  constructor(a: number, b: number) {
     super(a);
     this.b = b;
   }
 
-  getB() {
+  getB(): number {
     return this.b;
   }
 
-  getA() {
+  getA(): number {
     console.log('calling A from B');
-    return this;
+    return this.a;
   }
 
 }
@@ -65,16 +74,18 @@ class B extends A {
 
 class C extends A {
 
-  constructor(a, c) {
+  c: number;
+
+  constructor(a: number, c: number) {
     super(a);
     this.c = c;
   }
 
-  getC() {
+  getC(): number {
     return this.c;
   }
 
-  getA() {
+  getA(): number {
     console.log('calling A from C');
     return this.a;
   }
@@ -84,12 +95,14 @@ class C extends A {
 
 class D extends mix(B, C) {
 
-  constructor(a, b, c, d) {
+  d: number;
+
+  constructor(a: number, b: number, c: number, d: number) {
     super([B, a, b], [C, a, c]);
     this.d = d;
   }
 
-  getD() {
+  getD(): number {
     return this.d;
   }
 
@@ -104,7 +117,9 @@ class D extends mix(B, C) {
 
 class E {
 
-  constructor(blah) {
+  blah: number;
+
+  constructor(blah: number) {
     this.blah = blah;
   }
 
@@ -124,7 +139,7 @@ class F extends mix(D, E) {
 
 class ExController extends Injectable {
 
-  move(element) {
+  move(element: HTMLElement): ExController {
     console.log('Am I aware of derived injections? ', this.$log);
     element.css('left', `${Math.random() * this.exService.getRange()}px`);
     element.css('top', `${Math.random() * this.exService.getRange()}px`);
@@ -139,7 +154,7 @@ class DerivedController extends mix(ExController, C) {
 
   constructor(...args) {
     super([ExController, ...args], [C, 5000, 6000]);
-    const f = new F();
+    const f: F = new F();
     D.sayHi();
     console.log(`f is D: ${isinstance(f, D)}`);
     console.log(`f is E: ${isinstance(f, E)}`);
@@ -152,7 +167,14 @@ class DerivedController extends mix(ExController, C) {
     console.log('isinstance(objC, B): ', isinstance(this.obj, [ExController, B]));
     console.log('isinstance(objC, C): ', isinstance(this.obj, C));
     console.log('isinstance(objC, ExController): ', isinstance(this.obj, ExController));
-    console.log('made object C: ', [this.obj.getA(), this.obj.getB(), this.obj.getC(), this.obj.getD(), this.obj.getX(), this.obj.getY()]);
+    console.log('made object C: ', [
+      this.obj.getA(),
+      this.obj.getB(),
+      this.obj.getC(),
+      this.obj.getD(),
+      this.obj.getX(),
+      this.obj.getY(),
+    ]);
     console.log('Derived: ', this);
   }
 

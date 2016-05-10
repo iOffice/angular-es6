@@ -14,11 +14,14 @@ const config = {
     path: rel('..'),
     filename: '[name].js',
   },
+  resolve: {
+    extensions: ['', '.tsx', '.ts', '.js'],
+  },
   module: {
     loaders: [
       {
-        test: /\.js$/,
-        loader: 'babel',
+        test: /\.ts$/,
+        loader: 'awesome-typescript-loader',
         exclude: [
           /node_modules\//,
         ],

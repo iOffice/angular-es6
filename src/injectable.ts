@@ -1,16 +1,16 @@
 class Injectable {
 
-  constructor(...args) {
-    this.constructor.$inject.forEach((name, index) => {
+  constructor(...args: any[]) {
+    this.constructor.$inject.forEach((name: string, index: number) => {
       this[name] = args[index];
     });
   }
 
-  static inject(...args) {
+  static inject(...args: any[]): void {
     if (!this.$inject) {
       this.$inject = [];
     }
-    args.forEach((arg) => {
+    args.forEach((arg: any) => {
       if (typeof arg === 'string') {
         this.$inject.push(arg);
       } else {
