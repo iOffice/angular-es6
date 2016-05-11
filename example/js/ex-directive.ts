@@ -4,7 +4,6 @@ import { Injectable } from '../../src/index';
 
 class ExDirective extends Injectable {
 
-  static $inject: string[] = ['$interval'];
   $interval: any;
   template: string;
   scope: {};
@@ -32,5 +31,8 @@ class ExDirective extends Injectable {
   }
 
 }
+Injectable.inject(ExDirective, [
+  '$interval',
+]);
 
 export default ExDirective;

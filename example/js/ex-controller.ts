@@ -4,7 +4,6 @@ import ExService from './ex-service';
 
 class ExController extends Injectable {
 
-  static $inject: string[] = ['exService'];
   exService: ExService;
 
   move(element: JQuery): ExController {
@@ -17,12 +16,13 @@ class ExController extends Injectable {
   }
 
 }
-
+Injectable.inject(ExController, [
+  'exService',
+]);
 
 class DerivedController extends ExController {
 
-  static $inject: string[] = ['$log', 'exService'];
-  $log: any;
+  $log: ng.ILogService;
   exService: ExService;
 
   constructor(...args: any[]) {
@@ -36,6 +36,10 @@ class DerivedController extends ExController {
   }
 
 }
+Injectable.inject(DerivedController, [
+  '$log',
+]);
+
 
 console.log('CHECK EM: ', DerivedController.$inject, ExController.$inject);
 
