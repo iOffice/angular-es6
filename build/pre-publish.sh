@@ -4,7 +4,7 @@ VERSION=$(node --eval "console.log(require('./package.json').version);")
 
 git checkout -b pre-release-v$VERSION
 
-npm run babel
+npm run tsc
 git add lib/ -f
 
 git commit -m "v$VERSION"
