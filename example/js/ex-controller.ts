@@ -1,11 +1,28 @@
-import { Injectable, Inject } from '../../src/index';
+/**
+ * TOOD: What happens when we mix to Injectables? The super constructor will be messy, please don't
+ * go there. Just don't.
+ */
+import { Injectable, Inject, mix } from '../../src/index';
 import ExService from './ex-service';
 
 
+class Swimmer {
+
+  swim(): void {
+    console.log('swimming...');
+  }
+
+}
+
+
 @Inject(['exService'])
-class ExController extends Injectable {
+class ExController extends mix(Injectable, Swimmer) {
 
   exService: ExService;
+
+  constructor(...args: any[]) {
+    super([Injectable, ...args], [Swimmer]);
+  }
 
   move(element: JQuery): ExController {
     // Next line will work only if we call it from a DerivedController, if called from
