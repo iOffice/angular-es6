@@ -111,7 +111,6 @@ class D extends mix(B, C) {
   d: string;
 
   // inherited methods
-  callBase: Function;
   getY: () => string;
   getA: () => string;
   getB: () => string;
@@ -156,6 +155,7 @@ class F extends mix(D, E) {
   getC: () => string;
   getD: () => string;
   getE: () => string;
+  static sayX: () => string;
 
   constructor() {
     super([D, 'a', 'b', 'c', 'd'], [E, 'e']);
@@ -180,6 +180,7 @@ describe('mix-generations:isinstance', () => {
       expect(f.getC()).toBe('c');
       expect(f.getD()).toBe('d');
       expect(f.getE()).toBe('e');
+      expect(F.sayX()).toBe('X');
     });
 
     it('should allow us to use instance of correctly', () => {

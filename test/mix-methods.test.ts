@@ -81,7 +81,6 @@ class D2 extends mix(AB, AC) {
   d: number;
 
   // Inherited methods
-  callBase: Function;
   getAC: () => number;
 
   constructor(a: number, ab: number, ac: number, d: number) {
@@ -101,7 +100,7 @@ class D2 extends mix(AB, AC) {
   }
 
   getAB(): number {
-    return -super.getAB();
+    return -this.callBase(AB, 'getAB');
   }
 
   getD(): number {

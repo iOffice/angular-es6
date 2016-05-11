@@ -12,6 +12,19 @@ import * as angular from 'angular';
 class NgRegister {
 
   app: angular.IModule;
+  requires: Function;
+  name: Function;
+  provider: Function;
+  service: Function;
+  value: Function;
+  constant: Function;
+  decorator: Function;
+  animation: Function;
+  filter: Function;
+  controller: Function;
+  component: Function;
+  config: Function;
+  run: Function;
 
   constructor(appName: string, dependencies?: string[]) {
     if (dependencies === undefined) {
@@ -74,14 +87,14 @@ class NgRegister {
       };
     });
 
-    const factoryArray = this._createFactoryArray(constructorFn);
+    const factoryArray: any[] = this._createFactoryArray(constructorFn);
     this.app.directive(name, factoryArray);
     return this;
   }
 
-  factory(name, constructorFunction) {
-    const constructorFn = this._normalizeConstructor(constructorFunction);
-    const factoryArray = this._createFactoryArray(constructorFn);
+  factory(name: string, constructorFunction: Function): NgRegister {
+    const constructorFn: Function = this._normalizeConstructor(constructorFunction);
+    const factoryArray: any[] = this._createFactoryArray(constructorFn);
     this.app.factory(name, factoryArray);
     return this;
   }
@@ -91,9 +104,9 @@ class NgRegister {
    * we need to pull out the array of dependencies and add it as an $inject property of the
    * actual constructor function.
    */
-  _normalizeConstructor(input: Function|Array): Function {
+  _normalizeConstructor(input: Function|Array<any>): Function {
     let constructorFn: Function;
-    if (input.constructor === Array) {
+    if (Array.isArray(input)) {
       const injected: string[] = input.slice(0, input.length - 1);
       constructorFn = input[input.length - 1];
       constructorFn.$inject = injected;
@@ -110,17 +123,22 @@ class NgRegister {
    * In order to inject the dependencies, they must be attached to the constructor function with the
    * `$inject` property annotation.
    */
-  _createFactoryArray(CostructorFn) {
+  _createFactoryArray(constructorFn: Function): any[] {
     // get the array of dependencies that are needed by this component (as contained in the
     // `$inject` array)
-    const args: string[] = CostructorFn.$inject || [];
+    const args: string[] = constructorFn.$inject || [];
     // create a copy of the array
-    const factoryArray: string[] = args.slice();
+    const factoryArray: any[] = args.slice();
     // The factoryArray uses Angular's array notation whereby each element of the array is the name
     // of a dependency, and the final item is the factory function itself.
-    factoryArray.push((...factoryArgs) => {
+    factoryArray.push((...factoryArgs: string[]) => {
       // return new constructorFn(...args);
-      const instance = new CostructorFn(...factoryArgs);
+      // typescript can't convert the next line, using the output from babel instead
+      // const instance = new constructorFn(...factoryArgs);
+      const instance: any = new (Function.prototype.bind.apply(
+          constructorFn,
+          [undefined].concat(factoryArgs))
+      )();
       // see this: https://github.com/michaelbromley/angular-es6/issues/1
       for (const key in instance) {
         instance[key] = instance[key];
@@ -136,8 +154,8 @@ class NgRegister {
    * @param original
    * @returns {Function}
    */
-  _cloneFunction(original) {
-    return function clonedFunction(...args) {
+  _cloneFunction(original: Function): Function {
+    return function clonedFunction(...args: any[]): any {
       return original.apply(this, args);
     };
   }
@@ -148,9 +166,8 @@ class NgRegister {
    * @param methodName
    * @param callback
    */
-  _override(object, methodName, callback) {
-    const obj = object;
-    obj[methodName] = callback(object[methodName]);
+  _override(object: any, methodName: string, callback: Function): void {
+    object[methodName] = callback(object[methodName]);
   }
 
 }

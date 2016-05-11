@@ -4,7 +4,6 @@
   "version": "0.1.1",
   "private": true,
   "devDependencies": {
-    "awesome-typescript-loader": "^0.17.0",
     "jasmine": "^2.4.1",
     "karma": "^0.13.22",
     "karma-chrome-launcher": "^1.0.1",
@@ -12,6 +11,7 @@
     "karma-webpack": "^1.7.0",
     "live-server": "^1.0.0",
     "sinon": "^1.17.4",
+    "ts-loader": "^0.8.2",
     "tslint": "^3.9.0",
     "typescript": "^1.8.10",
     "typings": "^0.8.1",

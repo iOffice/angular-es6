@@ -4,7 +4,14 @@ import { Injectable } from '../../src/index';
 
 class ExDirective extends Injectable {
 
-  constructor(...args) {
+  static $inject: string[] = ['$interval'];
+  $interval: any;
+  template: string;
+  scope: {};
+  restrict: string;
+  controller: any;
+
+  constructor(...args: any[]) {
     super(...args);
     console.log('ExDirective: ', this);
     this.template = '<div>I\'m a directive!</div>';
@@ -15,7 +22,7 @@ class ExDirective extends Injectable {
   }
 
   // optional compile function
-  compile(tElement: HTMLElement): void {
+  compile(tElement: JQuery): void {
     tElement.css('position', 'absolute');
   }
 
@@ -25,7 +32,5 @@ class ExDirective extends Injectable {
   }
 
 }
-ExDirective.inject('$interval');
-
 
 export default ExDirective;

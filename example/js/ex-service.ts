@@ -1,15 +1,17 @@
 class ExService {
 
+  range: number;
+
   constructor() {
     this.range = 500;
   }
 
-  setRange(range) {
+  setRange(range: number): ExService {
     this.range = range;
     return this;
   }
 
-  getRange() {
+  getRange(): number {
     return this.range;
   }
 

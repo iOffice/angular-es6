@@ -21,9 +21,9 @@ const config = {
     loaders: [
       {
         test: /\.ts$/,
-        loader: 'awesome-typescript-loader',
+        loader: 'ts-loader',
         exclude: [
-          /node_modules\//,
+          /node_modules/,
         ],
       },
       { test: /\.css$/, loader: 'style!css' },

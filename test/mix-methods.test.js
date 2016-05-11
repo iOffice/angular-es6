@@ -70,7 +70,7 @@ var D2 = (function (_super) {
         return fromA + fromAB + fromAC;
     };
     D2.prototype.getAB = function () {
-        return -_super.prototype.getAB.call(this);
+        return -this.callBase(AB, 'getAB');
     };
     D2.prototype.getD = function () {
         return this.d;

@@ -14,7 +14,8 @@ function _addBase(clazz: any, mixin: any): void {
 }
 
 
-function mix(...mixins: any[]): typeof Mix {
+// tslint:disable:typedef
+function mix(...mixins: any[]) {
   class Mix {
 
     static $$mixins: any[] = [];
@@ -24,7 +25,7 @@ function mix(...mixins: any[]): typeof Mix {
      *
      *      super([mixin1, arg1, arg2, ...], [mixin2, arg1, arg2, ...], ...);
      */
-    constructor(...args: any[][]) {
+    constructor(...args: Array<any>[]) {
       args.forEach((arg: any[]) => {
         const clazz: any = arg[0];
         const constructorArgs: any[] = arg.slice(1);
@@ -41,7 +42,9 @@ function mix(...mixins: any[]): typeof Mix {
   }
 
   mixins.forEach((mixin: any) => {
+    // Addding parent mixins
     _addBase(Mix, mixin);
+    // Necessary to inherit static methods
     for (const p in mixin) {
       if (p !== '$$mixins') {
         Mix[p] = mixin[p];
@@ -55,6 +58,7 @@ function mix(...mixins: any[]): typeof Mix {
 
   return Mix;
 }
+// tslint:enable:typedef
 
 
 function _isinstance(object: any, classinfo: any): boolean {
