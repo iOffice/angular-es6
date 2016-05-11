@@ -50,8 +50,7 @@ class MyAngularComponent extends Injectable {
         // more stuff here
     }
 }
-MyAngularComponent.inject('dependency1', 'dependency2');
-// MyAngularComponent.inject(['dependency1', 'dependency2']);
+Injectable.inject(MyAngularComponent, ['dependency1', 'dependency2']);
 
 
 ngRegister('app')
@@ -62,7 +61,7 @@ ngRegister('app')
     .directive('myDirective', MyAngularComponent);
 ```
 
-**NOTE:** Do not forget to call the `super` constructor with all `...args`.
+**NOTE:** Do not forget to call the `super` constructor with `...args`.
 
 If you need to make a component that is `Injectable` and extends from some other class you may
 use the `mix` function provided by this library. For instance:
@@ -97,12 +96,42 @@ class SomeController extends mix(Injectable, OtherClass) {
   }
 
 }
-SomeController.inject([
+Injectable.inject(SomeController, [
   'dep1',
   'dep2',
   // and so on ...
 ]);
 ```
+
+If we have `experimentalDecorators` turned on on the typescript compiler we may write an angular
+component as follows:
+
+```javascript
+import { ngRegister, Injectable, Inject } from 'angular-es6';
+
+
+@Inject(['dependency1', 'dependency2'])
+class MyAngularComponent extends Injectable {
+
+    constructor(...args) {
+        super(...args);
+        // stuff happens here
+    }
+    someMethods() {
+        this.dependency1.doThatThing();
+        // more stuff here
+    }
+}
+
+
+ngRegister('app')
+    .controller('MyController', MyAngularComponent)
+    .service('myService', MyAngularComponent)
+    .provider('myOtherService', MyAngularComponent)
+    .factory('myFactory', MyAngularComponent)
+    .directive('myDirective', MyAngularComponent);
+```
+
 
 NOTE: Do not use `instanceof` when using `mix`. Instead use the `isinstance` function provided by
 the library.
@@ -114,9 +143,9 @@ See `example/js/ex-directive.js`. One thing to mention here is that `compile`, `
 then only the `postLink` method will be called. These two methods should be one and the same so only
 declare one.
 
-### IE WARNING
+### IE & Babel WARNING
 
-When using inheritance we need the following polyfill in IE:
+When using inheritance using babel we need the following polyfill in IE:
 
 ```javascript
 const key = 'setPrototypeOf';
@@ -124,12 +153,5 @@ if (typeof Object[key] === 'undefined') {
   Object[key] = require('babel-runtime/helpers/defaults.js').default;
 }
 ```
-
-Or just add this to the top of your file:
-
-```javascript
-import 'angular-es6/set-prototype-of-polyfill';
-```
-
 
 [1]: https://github.com/michaelbromley/angular-es6
