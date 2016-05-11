@@ -1,7 +1,8 @@
-import { Injectable } from '../../src/index';
+import { Injectable, Inject } from '../../src/index';
 import ExService from './ex-service';
 
 
+@Inject(['exService'])
 class ExController extends Injectable {
 
   exService: ExService;
@@ -16,10 +17,9 @@ class ExController extends Injectable {
   }
 
 }
-Injectable.inject(ExController, [
-  'exService',
-]);
 
+
+@Inject(['$log'])
 class DerivedController extends ExController {
 
   $log: ng.ILogService;
@@ -36,9 +36,6 @@ class DerivedController extends ExController {
   }
 
 }
-Injectable.inject(DerivedController, [
-  '$log',
-]);
 
 
 console.log('CHECK EM: ', DerivedController.$inject, ExController.$inject);

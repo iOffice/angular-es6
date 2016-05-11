@@ -22,4 +22,14 @@ class Injectable {
 }
 
 
-export default Injectable;
+function Inject(args: string[]): Function {
+  return (target: Function) => {
+    Injectable.inject(target, args);
+  };
+}
+
+
+export {
+  Injectable,
+  Inject,
+};
