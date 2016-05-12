@@ -1,8 +1,10 @@
 {
   "name": "angular-es6",
   "description": "An approach to using ES6 class in Angular JS 1.x",
-  "version": "0.1.1",
+  "version": "0.2.0a",
   "private": true,
+  "main": "lib/index.js",
+  "typings": "lib/index.d.ts",
   "devDependencies": {
     "jasmine": "^2.4.1",
     "karma": "^0.13.22",

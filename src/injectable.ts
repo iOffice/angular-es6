@@ -23,7 +23,7 @@ class Injectable {
 
 
 function Inject(args: string[]): Function {
-  return (target: Function) => {
+  return (target: any) => {
     Injectable.inject(target, args);
   };
 }

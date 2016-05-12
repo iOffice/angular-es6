@@ -178,4 +178,10 @@ function ngRegister(appName: string, dependencies?: string[]): NgRegister {
 }
 
 
+export {
+  NgRegister,
+  ngRegister
+};
+
 export default ngRegister;
+

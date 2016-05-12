@@ -14,31 +14,28 @@ function _addBase(clazz: any, mixin: any): void {
 }
 
 
+class IMixin {
+
+  constructor(...args: Array<any>[]) {
+    args.forEach((arg: any[]) => {
+      const clazz: any = arg[0];
+      const constructorArgs: any[] = arg.slice(1);
+      clazz.call(this, ...constructorArgs);
+    });
+  }
+
+  callBase(base: any, method: string, ...args: any[]): any {
+    return base.prototype[method].call(this, ...args);
+  }
+}
+
+
 // tslint:disable:typedef
-function mix(...mixins: any[]) {
-  class Mix {
+function mix(...mixins: any[]): typeof IMixin {
+  class Mix extends IMixin {
 
     static $$mixins: any[] = [];
 
-    /**
-     * When extending from a Mix object we must call `super` in the following fashion
-     *
-     *      super([mixin1, arg1, arg2, ...], [mixin2, arg1, arg2, ...], ...);
-     */
-    constructor(...args: Array<any>[]) {
-      args.forEach((arg: any[]) => {
-        const clazz: any = arg[0];
-        const constructorArgs: any[] = arg.slice(1);
-        clazz.call(this, ...constructorArgs);
-      });
-    }
-
-    /**
-     * Allows to call any of the base methods.
-     */
-    callBase(base: any, method: string, ...args: any[]): any {
-      return base.prototype[method].call(this, ...args);
-    }
   }
 
   mixins.forEach((mixin: any) => {
@@ -94,6 +91,7 @@ function isinstance(object: any, classinfo: any): boolean {
 
 
 export {
+  IMixin,
   mix,
   isinstance,
 };
