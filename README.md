@@ -1,3 +1,7 @@
+# Deprecated
+
+Replaced by https://github.com/iOffice/angular-ts
+
 # Angular ES6
 
 This library provides the `ngRegister` function which is a modified copy of Michael Bromley's
